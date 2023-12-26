@@ -156,12 +156,12 @@ document.addEventListener('DOMContentLoaded', function() {
     })
 
     document.addEventListener('keydown', (event) => { 
-        if (event.code = 'Escape' && modalBlock.style.display == 'block'){
+        if (event.code == 'Escape' && modalBlock.style.display == 'block'){
             closeModal(modalBlock);
         }
     })
 
-   /*  const timerShowModal = setTimeout(showModal, 5000, modalBlock); */
+    const timerShowModal = setTimeout(showModal, 3000000, modalBlock);
 
     function showModalToScroll(){
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -219,10 +219,57 @@ document.addEventListener('DOMContentLoaded', function() {
         'menu__item',
         ).render();
 
-        
 
+    /* Отправка форм */
+
+    const forms = document.querySelectorAll('form');
+
+    const message = {
+        loading: 'загрузка',
+        succes: 'Спасибо! Скоро мы с вами свяжемся.',
+        failure: 'Что-то пошло не так...'
+    };
+
+    forms.forEach(item => {
+        postData(item);
+    })
+
+    function postData(form){
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const statusMessage = document.createElement('div');
+            statusMessage.classList.add('status');
+            statusMessage.textContent = message.loading;
+            form.append(statusMessage);
+
+            const request = new XMLHttpRequest();
+            request.open('POST', 'server.php');
+
+            const formData = new FormData(form);
+            request.send(formData);
+
+            request.addEventListener('load', ()=> {
+                if (request.status === 200){
+                    console.log(request.response);
+                    statusMessage.textContent = message.succes;
+                    form.reset();
+                } else {
+                    statusMessage.textContent = message.failure;
+                }
+
+                setInterval(() => {
+                    statusMessage.remove();
+                }, 5000)
+            })
+        })
+    }
 
 });
+
+
+
+
 
 
 
