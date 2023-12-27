@@ -5,11 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let tabContent = document.querySelectorAll('.tabcontent'),
     tabsParrent = document.querySelector('.tabheader__items'),
     tabs = tabsParrent.querySelectorAll('.tabheader__item');
-
-    console.log(tabsParrent);
-    console.log(tabs);
-    console.log(tabContent);
-
     function hideTabContent(){
 
         tabContent.forEach(element => {
@@ -146,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function() {
     modalBlock.addEventListener('click', (event) => { 
         if (event.target == modalBlock || event.target.hasAttribute('data-modal-close')) {
             closeModal(modalBlock);
-            console.log(event.target)
         }
     })
 
@@ -242,24 +236,35 @@ document.addEventListener('DOMContentLoaded', function() {
        
             form.insertAdjacentElement('afterend', statusMessage);
 
-            const request = new XMLHttpRequest();
-            request.open('POST', 'server.php');
-
             const formData = new FormData(form);
-            request.send(formData);
 
-            request.addEventListener('load', ()=> {
-                if (request.status === 200){
-                    showThanksModal(message.succes)
-                    form.reset();
-                } else {
-                    showThanksModal(message.failure)
-                }
+            const object = {};
 
-                setInterval(() => {
-                    statusMessage.remove();
-                }, 4000)
+            formData.forEach((key, value) => {
+                object[key] = value;
             })
+
+            fetch('server.php', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(object)
+            })
+            .then(data => data.text())
+            .then((data) => {
+                console.log(data);
+                showThanksModal(message.succes);
+                
+            }).catch(() => {
+                showThanksModal(message.failure);
+                
+            }).finally(() => {
+                form.reset();
+                statusMessage.remove();
+                
+            });
+
         })
     };
 
