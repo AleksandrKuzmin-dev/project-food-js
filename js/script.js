@@ -303,10 +303,56 @@ document.addEventListener('DOMContentLoaded', function() {
         
     };
 
-    fetch('http://localhost:3000/menu')
-    .then(data => data.json())
-    .then(res => console.log(res))
+
+/* SLIDER */
+
+const sliderItems = document.querySelectorAll('.offer__slide'),
+      sliderBtnrPrev = document.querySelector('.offer__slider-prev'),
+      sliderBtnrNext = document.querySelector('.offer__slider-next'),
+      sliderCurrentValue = document.querySelector('#current'),
+      sliderTotalValue = document.querySelector('#total'),
+      sliderWrapper = document.querySelector('.offer__slider-wrapper'),
+      sliderField = document.querySelector('.offer__slider-inner'),
+      width = window.getComputedStyle(sliderWrapper).width;
+
+let sliderLength;
+let currentSlide = 1;
+
+function startSlider(){
+    sliderLength = sliderItems.length;
+
+    sliderCurrentValue.textContent = getZeroInTime(currentSlide);
+    sliderTotalValue.textContent = getZeroInTime(sliderLength);
+
+    sliderBtnrPrev.addEventListener('click', () => changeSlide('left'))
+    sliderBtnrNext.addEventListener('click', () => changeSlide('right'))
+
+    sliderWrapper.style.overflow = 'hidden';
+    sliderField.style.width = 100 * sliderLength + "%";
+    sliderField.style.display = 'flex';
+    sliderField.style.transition = "0.5s all";
+    sliderItems.forEach(slide => slide.style.width = width)
+
+    changeSlide('left');
+}
+
+function changeSlide(direction){
+   if (direction == 'right' && currentSlide < sliderLength) {
+        currentSlide++;
+   } else if (direction == 'left' && currentSlide > 1){
+        currentSlide--;
+   } else {
+        return;
+   }
+
+    sliderField.style.transform = `translateX(-${width.slice(0, width.length - 2) * (currentSlide - 1)}px)`;
+    sliderCurrentValue.textContent = getZeroInTime(currentSlide);
+}
+
+startSlider();
+
 });
+
 
 
 
