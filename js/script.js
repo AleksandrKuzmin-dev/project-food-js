@@ -7,8 +7,6 @@ import forms from './modules/forms';
 import slider from './modules/slider';
 
 document.addEventListener('DOMContentLoaded', function() {
-
-
     tabs();
     modal();
     timer();

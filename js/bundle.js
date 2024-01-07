@@ -673,8 +673,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 document.addEventListener('DOMContentLoaded', function() {
-
-
     (0,_modules_tabs__WEBPACK_IMPORTED_MODULE_0__["default"])();
     (0,_modules_modal__WEBPACK_IMPORTED_MODULE_1__["default"])();
     (0,_modules_timer__WEBPACK_IMPORTED_MODULE_2__["default"])();
